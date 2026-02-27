@@ -439,30 +439,6 @@ p {
     background: var(--secondary-dark);
 }
 
-.hero-stats {
-    display: flex;
-    justify-content: center;
-    gap: 3rem;
-    margin-top: 2.5rem;
-}
-
-.hero-stat {
-    text-align: center;
-}
-
-.hero-stat .stat-number {
-    font-size: 1.75rem;
-    font-weight: 800;
-    color: #fff;
-    display: block;
-}
-
-.hero-stat .stat-label {
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.7);
-    display: block;
-    margin-top: 0.25rem;
-}
 
 /* ============================================
    SECTION STYLES
@@ -1753,14 +1729,6 @@ p {
         padding: 0.9rem 1.25rem;
     }
 
-    .hero-stats {
-        gap: 1.5rem;
-        margin-top: 2rem;
-    }
-
-    .hero-stat .stat-number {
-        font-size: 1.5rem;
-    }
 
     .section {
         padding: 2.5rem 0;
@@ -2060,19 +2028,6 @@ p {
         font-size: 0.9rem;
     }
 
-    .hero-stats {
-        flex-direction: row;
-        justify-content: center;
-        gap: 1rem;
-    }
-
-    .hero-stat .stat-number {
-        font-size: 1.25rem;
-    }
-
-    .hero-stat .stat-label {
-        font-size: 0.75rem;
-    }
 
     .platforms-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -2186,9 +2141,6 @@ p {
         margin-bottom: 1rem;
     }
 
-    .hero-stats {
-        margin-top: 1rem;
-    }
 
     .section {
         padding: 2rem 0;

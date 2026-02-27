@@ -553,35 +553,6 @@ function crp_customizer_register( $wp_customize ) {
         'type'    => 'textarea',
     ) );
 
-    $wp_customize->add_setting( 'crp_stat_reviews', array(
-        'default'           => '500+',
-        'sanitize_callback' => 'sanitize_text_field',
-    ) );
-    $wp_customize->add_control( 'crp_stat_reviews', array(
-        'label'   => __( 'Total Reviews Count', 'course-reviewer-pro' ),
-        'section' => 'crp_hero_section',
-        'type'    => 'text',
-    ) );
-
-    $wp_customize->add_setting( 'crp_stat_platforms', array(
-        'default'           => '25+',
-        'sanitize_callback' => 'sanitize_text_field',
-    ) );
-    $wp_customize->add_control( 'crp_stat_platforms', array(
-        'label'   => __( 'Platforms Covered', 'course-reviewer-pro' ),
-        'section' => 'crp_hero_section',
-        'type'    => 'text',
-    ) );
-
-    $wp_customize->add_setting( 'crp_stat_students', array(
-        'default'           => '50K+',
-        'sanitize_callback' => 'sanitize_text_field',
-    ) );
-    $wp_customize->add_control( 'crp_stat_students', array(
-        'label'   => __( 'Students Helped', 'course-reviewer-pro' ),
-        'section' => 'crp_hero_section',
-        'type'    => 'text',
-    ) );
 
     $wp_customize->add_section( 'crp_footer_section', array(
         'title'    => __( 'Footer Settings', 'course-reviewer-pro' ),
