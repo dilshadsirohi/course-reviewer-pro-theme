@@ -50,14 +50,6 @@ get_header();
                         </div>
                     </div>
                 </article>
-
-                <?php
-                if ( comments_open() || get_comments_number() ) :
-                    echo '<div style="max-width: 800px; margin: 0 auto;">';
-                    comments_template();
-                    echo '</div>';
-                endif;
-                ?>
             <?php endwhile; ?>
         </div>
     </div>
