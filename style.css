@@ -405,7 +405,6 @@ p {
 }
 
 .hero-search {
-    display: flex;
     max-width: 500px;
     margin: 0 auto;
     background: var(--bg-white);
@@ -414,8 +413,14 @@ p {
     box-shadow: var(--shadow-xl);
 }
 
+.hero-search form {
+    display: flex;
+    width: 100%;
+}
+
 .hero-search input {
     flex: 1;
+    min-width: 0;
     border: none;
     padding: 1rem 1.25rem;
     font-size: 16px;
@@ -433,6 +438,8 @@ p {
     font-size: 1rem;
     transition: var(--transition);
     font-family: var(--font-sans);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .hero-search button:hover {
@@ -1715,18 +1722,23 @@ p {
     }
 
     .hero-search {
-        flex-direction: column;
         border-radius: var(--radius-md);
+    }
+
+    .hero-search form {
+        flex-direction: column;
     }
 
     .hero-search input {
-        border-radius: var(--radius-md);
+        border-radius: var(--radius-md) var(--radius-md) 0 0;
         padding: 0.9rem 1rem;
+        width: 100%;
     }
 
     .hero-search button {
-        border-radius: var(--radius-md);
+        border-radius: 0 0 var(--radius-md) var(--radius-md);
         padding: 0.9rem 1.25rem;
+        width: 100%;
     }
 
 
