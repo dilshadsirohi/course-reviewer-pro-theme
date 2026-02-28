@@ -11,8 +11,8 @@ get_header();
 <main class="site-main" role="main">
     <div class="archive-header">
         <div class="container">
-            <h1><?php _e( 'Course Reviews', 'course-reviewer-pro' ); ?></h1>
-            <p class="archive-description"><?php _e( 'Browse our comprehensive collection of honest, in-depth course reviews.', 'course-reviewer-pro' ); ?></p>
+            <h1><?php echo esc_html( get_theme_mod( 'crp_reviews_heading', __( 'Course Reviews', 'course-reviewer-pro' ) ) ); ?></h1>
+            <p class="archive-description"><?php echo esc_html( get_theme_mod( 'crp_reviews_subheading', __( 'Browse our comprehensive collection of honest, in-depth course reviews.', 'course-reviewer-pro' ) ) ); ?></p>
         </div>
     </div>
 
