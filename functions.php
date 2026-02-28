@@ -527,7 +527,108 @@ function crp_review_schema() {
 }
 add_action( 'wp_head', 'crp_review_schema' );
 
+function crp_adjust_color_brightness( $hex, $steps ) {
+    $hex = ltrim( $hex, '#' );
+    if ( strlen( $hex ) === 3 ) {
+        $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+    }
+    $r = max( 0, min( 255, hexdec( substr( $hex, 0, 2 ) ) + $steps ) );
+    $g = max( 0, min( 255, hexdec( substr( $hex, 2, 2 ) ) + $steps ) );
+    $b = max( 0, min( 255, hexdec( substr( $hex, 4, 2 ) ) + $steps ) );
+    return sprintf( '#%02x%02x%02x', $r, $g, $b );
+}
+
+function crp_output_customizer_css() {
+    $primary      = get_theme_mod( 'crp_primary_color', '#1e40af' );
+    $secondary    = get_theme_mod( 'crp_secondary_color', '#f59e0b' );
+    $header_bg    = get_theme_mod( 'crp_header_bg_color', '#ffffff' );
+    $logo_width   = absint( get_theme_mod( 'crp_logo_max_width', 180 ) );
+
+    $primary_dark  = crp_adjust_color_brightness( $primary, -25 );
+    $primary_light = crp_adjust_color_brightness( $primary, 40 );
+    $secondary_dark = crp_adjust_color_brightness( $secondary, -25 );
+
+    echo '<style id="crp-customizer-css">' . "\n";
+    echo ':root {' . "\n";
+    echo '  --primary: ' . esc_attr( $primary ) . ';' . "\n";
+    echo '  --primary-dark: ' . esc_attr( $primary_dark ) . ';' . "\n";
+    echo '  --primary-light: ' . esc_attr( $primary_light ) . ';' . "\n";
+    echo '  --secondary: ' . esc_attr( $secondary ) . ';' . "\n";
+    echo '  --secondary-dark: ' . esc_attr( $secondary_dark ) . ';' . "\n";
+    echo '}' . "\n";
+    echo '.site-header { background-color: ' . esc_attr( $header_bg ) . '; }' . "\n";
+    if ( $logo_width ) {
+        echo '.site-logo img { max-width: ' . $logo_width . 'px; height: auto; }' . "\n";
+    }
+    echo '</style>' . "\n";
+}
+add_action( 'wp_head', 'crp_output_customizer_css' );
+
 function crp_customizer_register( $wp_customize ) {
+
+    /* ── Brand Colors ── */
+    $wp_customize->add_section( 'crp_colors_section', array(
+        'title'    => __( 'Brand Colors', 'course-reviewer-pro' ),
+        'priority' => 20,
+    ) );
+
+    $wp_customize->add_setting( 'crp_primary_color', array(
+        'default'           => '#1e40af',
+        'sanitize_callback' => 'sanitize_hex_color',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'crp_primary_color', array(
+        'label'   => __( 'Primary Color (header, links, buttons)', 'course-reviewer-pro' ),
+        'section' => 'crp_colors_section',
+    ) ) );
+
+    $wp_customize->add_setting( 'crp_secondary_color', array(
+        'default'           => '#f59e0b',
+        'sanitize_callback' => 'sanitize_hex_color',
+        'transport'         => 'postMessage',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'crp_secondary_color', array(
+        'label'   => __( 'Accent Color (search button, CTAs)', 'course-reviewer-pro' ),
+        'section' => 'crp_colors_section',
+    ) ) );
+
+    /* ── Header & Logo ── */
+    $wp_customize->add_section( 'crp_header_section', array(
+        'title'    => __( 'Header & Logo', 'course-reviewer-pro' ),
+        'priority' => 25,
+    ) );
+
+    $wp_customize->add_setting( 'crp_header_bg_color', array(
+        'default'           => '#ffffff',
+        'sanitize_callback' => 'sanitize_hex_color',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'crp_header_bg_color', array(
+        'label'   => __( 'Header Background Color', 'course-reviewer-pro' ),
+        'section' => 'crp_header_section',
+    ) ) );
+
+    $wp_customize->add_setting( 'crp_logo_max_width', array(
+        'default'           => 180,
+        'sanitize_callback' => 'absint',
+    ) );
+    $wp_customize->add_control( 'crp_logo_max_width', array(
+        'label'       => __( 'Logo Max Width (px)', 'course-reviewer-pro' ),
+        'section'     => 'crp_header_section',
+        'type'        => 'number',
+        'input_attrs' => array( 'min' => 60, 'max' => 400, 'step' => 10 ),
+    ) );
+
+    $wp_customize->add_setting( 'crp_hide_title_with_logo', array(
+        'default'           => 0,
+        'sanitize_callback' => 'absint',
+    ) );
+    $wp_customize->add_control( 'crp_hide_title_with_logo', array(
+        'label'   => __( 'Hide site title when logo is set', 'course-reviewer-pro' ),
+        'section' => 'crp_header_section',
+        'type'    => 'checkbox',
+    ) );
+
+    /* ── Hero Section ── */
     $wp_customize->add_section( 'crp_hero_section', array(
         'title'    => __( 'Hero Section', 'course-reviewer-pro' ),
         'priority' => 30,
@@ -553,7 +654,59 @@ function crp_customizer_register( $wp_customize ) {
         'type'    => 'textarea',
     ) );
 
+    /* ── Reviews Archive ── */
+    $wp_customize->add_section( 'crp_reviews_section', array(
+        'title'    => __( 'Reviews Archive', 'course-reviewer-pro' ),
+        'priority' => 40,
+    ) );
 
+    $wp_customize->add_setting( 'crp_reviews_heading', array(
+        'default'           => 'Course Reviews',
+        'sanitize_callback' => 'sanitize_text_field',
+    ) );
+    $wp_customize->add_control( 'crp_reviews_heading', array(
+        'label'   => __( 'Archive Page Heading', 'course-reviewer-pro' ),
+        'section' => 'crp_reviews_section',
+        'type'    => 'text',
+    ) );
+
+    $wp_customize->add_setting( 'crp_reviews_subheading', array(
+        'default'           => 'Browse our comprehensive collection of honest, in-depth course reviews.',
+        'sanitize_callback' => 'sanitize_text_field',
+    ) );
+    $wp_customize->add_control( 'crp_reviews_subheading', array(
+        'label'   => __( 'Archive Page Subheading', 'course-reviewer-pro' ),
+        'section' => 'crp_reviews_section',
+        'type'    => 'textarea',
+    ) );
+
+    /* ── Social Media ── */
+    $wp_customize->add_section( 'crp_social_section', array(
+        'title'    => __( 'Social Media Links', 'course-reviewer-pro' ),
+        'priority' => 80,
+    ) );
+
+    $social_networks = array(
+        'facebook'  => __( 'Facebook URL', 'course-reviewer-pro' ),
+        'twitter'   => __( 'Twitter / X URL', 'course-reviewer-pro' ),
+        'youtube'   => __( 'YouTube URL', 'course-reviewer-pro' ),
+        'instagram' => __( 'Instagram URL', 'course-reviewer-pro' ),
+        'linkedin'  => __( 'LinkedIn URL', 'course-reviewer-pro' ),
+    );
+    foreach ( $social_networks as $network => $label ) {
+        $wp_customize->add_setting( 'crp_social_' . $network, array(
+            'default'           => '',
+            'sanitize_callback' => 'esc_url_raw',
+        ) );
+        $wp_customize->add_control( 'crp_social_' . $network, array(
+            'label'       => $label,
+            'section'     => 'crp_social_section',
+            'type'        => 'url',
+            'input_attrs' => array( 'placeholder' => 'https://' ),
+        ) );
+    }
+
+    /* ── Footer Settings ── */
     $wp_customize->add_section( 'crp_footer_section', array(
         'title'    => __( 'Footer Settings', 'course-reviewer-pro' ),
         'priority' => 90,
