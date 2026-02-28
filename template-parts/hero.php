@@ -14,7 +14,7 @@
 
             <div class="hero-search">
                 <form role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-                    <input type="search" placeholder="<?php esc_attr_e( 'Search for a course or platform...', 'course-reviewer-pro' ); ?>" value="<?php echo get_search_query(); ?>" name="s">
+                    <input type="search" placeholder="<?php esc_attr_e( 'Search for a course or article...', 'course-reviewer-pro' ); ?>" value="<?php echo get_search_query(); ?>" name="s">
                     <button type="submit"><?php _e( 'Search', 'course-reviewer-pro' ); ?></button>
                 </form>
             </div>
