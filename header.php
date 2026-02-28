@@ -15,9 +15,13 @@
             <?php if ( has_custom_logo() ) : ?>
                 <div class="site-logo"><?php the_custom_logo(); ?></div>
             <?php endif; ?>
+            <?php
+            $hide_title = get_theme_mod( 'crp_hide_title_with_logo', 0 );
+            if ( ! $hide_title || ! has_custom_logo() ) : ?>
             <div class="site-title">
                 <a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php bloginfo( 'name' ); ?></a>
             </div>
+            <?php endif; ?>
         </div>
 
         <nav class="main-navigation" role="navigation" aria-label="<?php esc_attr_e( 'Primary Menu', 'course-reviewer-pro' ); ?>">
